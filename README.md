@@ -1,1 +1,1 @@
-# Polls-app
+# polls-redux
