@@ -1,3 +1,15 @@
+{% if not request.user.is_authenticated %}
+    <a href="/registration/signup">Sign Up</a>
+{% endif %}
+
+{% if request.user.is_authenticated %}
+    <p>
+        Hello, {{ request.user.username }}!
+    </p>
+
+    <a href="/polls/create">New Poll</a>
+{% endif %}
+
 <p align="right">
   <a href="/accounts/login">Login</a>
   <a href="/accounts/logout">Logout</a>
