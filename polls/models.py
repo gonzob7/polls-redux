@@ -4,11 +4,13 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField('date published')
+    author = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True, help_text='The user who posted this question.')
 
     def __str__(self):
         return self.question_text
@@ -16,7 +18,7 @@ class Question(models.Model):
     def was_published_recently(self):
         now = timezone.now()
         return now - datetime.timedelta(days=1) <= self.pub_date <= now
-        
+
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=200)

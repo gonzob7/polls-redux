@@ -6,7 +6,8 @@ from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
 from .forms import QuestionCreateForm
-
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
 
 from .models import Question, Choice
 # Create your views here.
@@ -58,7 +59,9 @@ def vote(request, question_id):
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
 
 
-class QuestionCreateView(generic.edit.CreateView):
+class QuestionCreateView(LoginRequiredMixin, generic.edit.CreateView):
+    login_url = reverse_lazy('login')
+
     def get(self, request, *args, **kwargs):
         context = {
           'form': QuestionCreateForm()
