@@ -6,6 +6,9 @@
 <h1>{{ question.question_text }}</h1>
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+{% if question.author %}
+    <p>Author: {{ question.author.username }}</p>
+{% endif %}
 
 <form action="{% url 'polls:vote' question.id %}" method="post">
 {% csrf_token %}

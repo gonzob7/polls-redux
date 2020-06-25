@@ -71,7 +71,8 @@ class QuestionCreateView(LoginRequiredMixin, generic.edit.CreateView):
     def post(self, request, *args, **kwargs):
         form = QuestionCreateForm(request.POST)
         if form.is_valid():
-            question = form.save()
+            question = form.save(commit=False) # don't save the question yet
+            question.author = request.user
             question.save()
             return HttpResponseRedirect(
                 reverse('polls:detail', args=[question.id]))
