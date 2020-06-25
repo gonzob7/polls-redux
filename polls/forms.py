@@ -1,6 +1,8 @@
 from django import forms
 
 from .models import Question
+from .models import Choice
+
 
 class QuestionCreateForm(forms.ModelForm):
     class Meta:

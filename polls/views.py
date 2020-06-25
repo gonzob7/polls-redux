@@ -8,6 +8,7 @@ from django.utils import timezone
 from .forms import QuestionCreateForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
+from .forms import ChoiceCreateForm
 
 from .models import Question, Choice
 # Create your views here.
@@ -78,3 +79,27 @@ class QuestionCreateView(LoginRequiredMixin, generic.edit.CreateView):
                 reverse('polls:detail', args=[question.id]))
         # else if form is not valid
         return render(request, 'polls/create.html', { 'form': form })
+
+
+class DetailView(generic.DetailView):
+    model = Question
+    template_name = 'polls/detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['choice_form'] = ChoiceCreateForm()
+        return context
+
+    def post(self, request, pk):
+        form = ChoiceCreateForm(request.POST)
+        if form.is_valid():
+            choice = form.save(commit=False)
+            choice.question = Question.objects.get(pk=pk)
+            choice.save()
+            return HttpResponseRedirect(reverse('polls:detail', args=[pk]))
+        # else if form is not valid
+        context = {
+          'choice_form': form,
+          'question': Question.objects.get(pk=pk)
+        }
+        return render(request, 'polls/detail.html', context)
